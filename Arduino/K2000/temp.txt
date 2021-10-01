@@ -1,0 +1,51 @@
+// K2000
+//
+
+const int LedCount = 6;
+const int LedPins[] = {3, 5, 6, 9, 10, 11, 12};
+
+const int kBorder = 0;
+const int kTrail = 1;
+
+int ledIntensity[] = {0, 0, 0, 0, 0, 0};
+
+int decay = 4;
+int current = 1;
+int delta = -1;
+
+void setup() {
+  Serial.begin(9600);
+  
+  for(int i = 0; i < LedCount; ++i) {
+    pinMode(LedPins[i], OUTPUT);
+    digitalWrite(LedPins[i], LOW);
+  }
+}
+
+void apply() {
+  for(int i = 0; i < LedCount; ++i) {
+    analogWrite(LedPins[i], ledIntensity[i]);
+    ledIntensity[i] -= (255 / (1 + kTrail));
+    if (ledIntensity[i] <= 0)
+      ledIntensity[i] = 0; 
+  }  
+}
+
+void loop() {
+
+  apply();
+  if (--decay == 0) {
+    if (current >= kBorder && current < kBorder + LedCount)
+      ledIntensity[current - kBorder] = 255;
+
+    current += delta;
+
+    if (current == 0 || current == LedCount + 2 * kBorder) {
+      delta = -delta;
+    }
+
+    decay = 4;
+  }
+
+  delay(20);
+}
