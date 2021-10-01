@@ -1,11 +1,12 @@
 // K2000
 //
 
-const int kLedCount = 6;
-const int kLedPins[] = {3, 5, 6, 9, 10, 11, 12};
+const int kLedPins[] = { 3, 5, 6, 9, 10, 11 };
+const int kLedCount = sizeof(kLedPins) / sizeof(kLedPins[0]);
+const int kLedIntensity[] = { 0, 1, 7, 15, 63, 255 };
+const int kLedIntensityCount = sizeof(kLedIntensity) / sizeof(kLedIntensity[0]);
 
-int ledIntensity[] = {0, 0, 0, 0, 0, 0};
-
+int ledIntensityIndex[] = { 0, 0, 0, 0, 0, 0 };
 
 void setup() {
   Serial.begin(9600);
@@ -14,35 +15,48 @@ void setup() {
     pinMode(kLedPins[i], OUTPUT);
     digitalWrite(kLedPins[i], LOW);
   }
+
+  ledIntensityIndex[0] = kLedIntensityCount - 1;
 }
 
-void apply() {
+void updateIntensity() {
+
+  Serial.print("> ");
+
   for(int i = 0; i < kLedCount; ++i) {
-    analogWrite(kLedPins[i], ledIntensity[i]);
-    ledIntensity[i] -= 25;
-    if (ledIntensity[i] <= 0)
-      ledIntensity[i] = 0; 
-  }  
+    if (ledIntensityIndex[i] > 0)
+    {
+      ledIntensityIndex[i] -= 1;
+    }
+
+    Serial.print(ledIntensityIndex[i], DEC);
+    Serial.print(" ");
+
+    analogWrite(kLedPins[i], kLedIntensity[ledIntensityIndex[i]]);
+  }
+
+  Serial.print("\n");
 }
 
-int decay = 4;
-int current = 1;
+int current = 0;
 int delta = -1;
 
 void loop() {
 
-  apply();
-  if (--decay == 0) {
-    if (current > 0 && current < 6)
-      ledIntensity[current] = 255;
-    current += delta;
+  Serial.print(current, DEC);
 
-    if (current == 0 || current == 5) {
-      delta = -delta;
-    }
+  updateIntensity();
 
-    decay = 4;
+  current += delta;
+  if (current < 0) {
+    current = 0;
+    delta = 1;
+  } else if (current > kLedCount - 1) {
+    current = kLedCount;
+    delta = -1;
   }
 
-  delay(40);
+  ledIntensityIndex[current] = kLedIntensityCount - 1;
+
+  delay(200);
 }
