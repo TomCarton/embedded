@@ -20,8 +20,6 @@ void setup() {
 }
 
 void blinkingLight(int light) {
-  digitalWrite(light, LOW);
-  delay(blinkingTime);
   digitalWrite(light, HIGH);
   delay(blinkingTime);
   digitalWrite(light, LOW);
@@ -32,23 +30,27 @@ void blinkingLight(int light) {
   delay(blinkingTime);
   digitalWrite(light, HIGH);
   delay(blinkingTime);
+  digitalWrite(light, LOW);
+  delay(blinkingTime);
+}
+
+void phase(int light, bool blinking) {
+  int time = blinking ? phaseTime - (6 * blinkingTime) : phaseTime;
+  
+  digitalWrite(light, HIGH);
+  delay(time);
+
+  if (blinking) blinkingLight(light);
+  else digitalWrite(light, LOW);
 }
 
 void loop() {
   // red
-  digitalWrite(LedRed, HIGH);
-  delay(phaseTime);
-  blinkingLight(LedRed);
-  digitalWrite(LedRed, LOW);
+  phase(LedRed, true);
 
   // green
-  digitalWrite(LedGreen, HIGH);
-  delay(phaseTime);
-  blinkingLight(LedGreen);
-  digitalWrite(LedGreen, LOW);
+  phase(LedGreen, true);
 
   // yellow
-  digitalWrite(LedYellow, HIGH);
-  delay(phaseTime);
-  digitalWrite(LedYellow, LOW);
+  phase(LedYellow, false);
 }
