@@ -29,19 +29,20 @@ void playNote(int buzzerPin, int note, int duration)
 {
   int ledPin = kFirstLedPin + (noteIndex % kLedPinCount);
 
+  duration = (duration * 1000) / 32;
   if (note)
   {
     digitalWrite(ledPin, HIGH);
-    tone(buzzerPin, note, duration * 25);
+    tone(buzzerPin, note, duration);
   }
 
-  delay(duration * 25);
+  delay(duration - 5);
 
   if (note)
   {
     digitalWrite(ledPin, LOW);
 
-    delay(2 * 25);
+    delay(5);
     ++noteIndex;
   }
 }
@@ -94,16 +95,17 @@ void playSong(int buzzerPin, const char *song)
     if (err == 0)
     {
       //                           A    A#   B   -   C    C#   D    D#   E   -   F    F#   G    G#
-      int frequenciesTable[] = {  220, 233, 247, 0, 261, 277, 293, 311, 329, 0, 349, 370, 392, 415, // 3
+      int frequenciesTable[] = {  110, 116, 123, 0, 130, 138, 147, 155, 164, 0, 175, 185, 196, 207, // 2
+                                  220, 233, 247, 0, 261, 277, 293, 311, 329, 0, 349, 370, 392, 415, // 3
                                   440, 466, 494, 0, 523, 554, 587, 622, 659, 0, 698, 740, 784, 830, // 4
                                   880, 932, 988, 0 };
-
-     int frequency = 0;
-     if (octave >= 3 && octave <= 5)
-     {
-      int index = (octave - 3) * 14 + note * 2 + sharp;
-      frequency = frequenciesTable[index];
-     }
+      
+      int frequency = 0;
+      if (octave >= 2 && octave <= 5)
+      {
+        int index = (octave - 2) * 14 + note * 2 + sharp;
+        frequency = frequenciesTable[index];
+      }
           
       playNote(buzzerPin, frequency, duration);
 
@@ -139,17 +141,28 @@ void playSong(int buzzerPin, const char *song)
   }
 }
 
+// ronde = 32           // 40
+// blanche = 16         // 20
+// noire pointée = 12   // 15
+// noire = 8            // 10
+// croche = 4           // 5
+// double croche = 2    // 2.5
+// triple croche = 1    // 1.25
+
 const char kStarWarsSong[] = 
-    "A4-20, A4-20, A4-20, F3-14, C4-6, A4-20, F3-14, C4-6, A4-26, -20, "
-    "E4-20, E4-20, E4-20, F4-14, C4-6, G#3-20, F3-14, C4-6, A4-26, -20, "
-    "A5-20, A4-12, A4-6, A5-20, G#4-13, G4-7, F#4-5, F4-5, F#4-10, -13, "
-    "A#4-10, D#4-20, D4-13, C#4-7, C4-5, B4-5, C4-10, -14, "
-    "F3-10, G#3-20, F3-14, A4-5, C4-20, A4-15, C4-5, E4-26, -20"
+    "A2-20, A2-20, A2-10, A2-5, A2-5, A2-5, F2-10, F2-10, "
+    "A2-20, A2-20, A2-10, A2-5, A2-5, A2-5, F2-10, F2-10, "
+    
+    "A4-20, A4-20, A4-20, F3-15, C4-5, A4-20, F3-15, C4-5, A4-40, "
+    "E4-20, E4-20, E4-20, F4-15, C4-5, G#3-20, F3-15, C4-5, A4-40, "
+    
+    "A5-20, A4-10, A4-5, A5-20, G#4-15, G4-5, F#4-5, F4-5, F#4-10, -15, "
+    "A#4-10, D#4-20, D4-15, C#4-5, C4-5, B4-5, C4-10, -15, "
+    "F3-10, G#3-20, F3-15, A4-5, C4-20, A4-15, C4-5, E4-25, -20, "
     "";
 
 void loop()
 {
-
   playSong(kBuzzerPin, kStarWarsSong);
   delay(1000);
 }
