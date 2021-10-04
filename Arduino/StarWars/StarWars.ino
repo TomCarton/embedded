@@ -1,23 +1,33 @@
 // StarWars
 //
 
-const int buzzerPin = 9;
-const int redLedPin = 10;
+const int kBuzzerPin = 9;
+const int kFirstLedPin = 10;
+const int kLedPinCount = 3;
+
+int noteIndex = 0;
 
 void setup()
 {
-  pinMode(buzzerPin, OUTPUT);
+  pinMode(kBuzzerPin, OUTPUT);
+
+  for (int i = 0; i < kLedPinCount; ++i)
+  {
+    pinMode(kFirstLedPin + i, OUTPUT);
+  }
 }
 
 void playNote(int note, int duration)
 {
-  digitalWrite(redLedPin, HIGH);
-  tone(buzzerPin, note, duration);
+  int ledPin = kFirstLedPin + (noteIndex % kLedPinCount);
+  digitalWrite(ledPin, HIGH);
+  tone(kBuzzerPin, note, duration);
 
   delay(duration);
-  digitalWrite(redLedPin, LOW);
+  digitalWrite(ledPin, LOW);
 
   delay(50);
+  ++noteIndex;
 }
 
 void loop()
