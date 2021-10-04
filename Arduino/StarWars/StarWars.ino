@@ -42,7 +42,7 @@ void loop()
   playNote(523, 6 * 25); // C5
   playNote(440, 26 * 25); // A4
  
-  delay(500);
+  delay(20 * 25);
  
   playNote(659, 20 * 25); // E5
   playNote(659, 20 * 25); // E5
@@ -54,7 +54,7 @@ void loop()
   playNote(523, 6 * 25); // C5
   playNote(440, 26 * 25); // A4
  
-  delay(500);
+  delay(20 * 25);
 
   playNote(880, 20 * 25); // A5
   playNote(440, 12 * 25); // A4
@@ -66,7 +66,7 @@ void loop()
   playNote(698, 5 * 25); // F5
   playNote(740, 10 * 25); // F#5
  
-  delay(325);
+  delay(13 * 25);
  
   playNote(466, 10 * 25); // A#4
   playNote(622, 20 * 25); // D#5
@@ -76,7 +76,7 @@ void loop()
   playNote(482, 5 * 25); // B4
   playNote(523, 10 * 25); // C5
  
-  delay(350);
+  delay(14 * 25);
   
   playNote(349, 10 * 25); // F4
   playNote(415, 20 * 25); // G#4
@@ -87,5 +87,5 @@ void loop()
   playNote(523, 5 * 25); // C5
   playNote(659, 26 * 25); // E5
  
-  delay(500);
+  delay(20 * 25);
 }
